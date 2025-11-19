@@ -9,8 +9,9 @@ from ai_review_bot.entity.review import ReviewContext
 from ai_review_bot.support.llm import ReviewLLMClient
 
 _HEADERS: Final[list[str]] = [
-    "주요 이슈 (Must Fix Before Merge)",
-    "개선 제안 (Nice to Have)",
+    "Summary",
+    "Must Fix",
+    "Nice to Have",
 ]
 _PRAISE_MESSAGE: Final[str] = (
     "> 👏 주요 이슈와 개선 제안이 모두 없었습니다. 가이드를 잘 지킨 안정적인 변경이에요!"
