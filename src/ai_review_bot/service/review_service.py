@@ -43,7 +43,8 @@ class ReviewService:
 
         formatted_sections: list[str] = []
         for header in _HEADERS:
-            if header not in report:
+            marker = f"## {header}"
+            if marker not in report:
                 # 헤더가 하나라도 빠져 있으면 원본 형식을 유지한다.
                 return report
             section = _extract_section(report, header)
@@ -60,7 +61,8 @@ class ReviewService:
 
 
 def _is_review_empty(report: str) -> bool:
-    if any(header not in report for header in _HEADERS):
+    """모든 헤더 섹션이 비어있는지 확인한다."""
+    if any(f"## {header}" not in report for header in _HEADERS):
         return False
     for header in _HEADERS:
         section = _extract_section(report, header)
@@ -70,18 +72,18 @@ def _is_review_empty(report: str) -> bool:
 
 
 def _extract_section(report: str, header: str) -> str:
-    if header not in report:
+    """헤더 마커(## ...)를 기준으로 섹션을 추출한다."""
+    marker = f"## {header}"
+    if marker not in report:
         return ""
-    start = report.index(header) + len(header)
+    start = report.index(marker) + len(marker)
     section = report[start:]
     section = section.lstrip("\n")
     for other in _HEADERS:
         if other == header:
             continue
-        marker = f"## {other}"
-        idx = section.find(marker)
-        if idx == -1:
-            idx = section.find(other)
+        other_marker = f"## {other}"
+        idx = section.find(other_marker)
         if idx != -1:
             section = section[:idx]
             break
