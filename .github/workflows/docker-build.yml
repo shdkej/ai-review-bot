@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,4 +28,3 @@ jobs:
 
       - name: Build and push
         run: docker buildx build --platform linux/amd64 -t shdkej/ai-code-review-bot:latest --push .
-
