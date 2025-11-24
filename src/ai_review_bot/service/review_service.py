@@ -104,14 +104,19 @@ def _is_section_empty(section: str) -> bool:
 
 
 def _format_section(section: str) -> str:
-    lines = [line.strip() for line in section.splitlines() if line.strip()]
-    if not lines:
+    raw_lines = section.splitlines()
+    cleaned: list[str] = []
+    previous_blank = False
+    for raw in raw_lines:
+        if not raw.strip():
+            if cleaned and not previous_blank:
+                cleaned.append("")
+            previous_blank = True
+            continue
+        cleaned.append(raw.rstrip())
+        previous_blank = False
+
+    if not cleaned:
         return "- 없음"
 
-    formatted: list[str] = []
-    for line in lines:
-        if line.startswith(("-", "*")):
-            formatted.append(line)
-        else:
-            formatted.append(f"- {line}")
-    return "\n".join(formatted)
+    return "\n".join(cleaned)

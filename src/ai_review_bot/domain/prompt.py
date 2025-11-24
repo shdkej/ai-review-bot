@@ -36,8 +36,13 @@ SYSTEM_PROMPT = dedent(
    - 파일명 라인은 들여쓰기 없음
    - 문제/영향/조치 라인은 앞에 스페이스 2칸으로 들여쓰기
    - 그 외 들여쓰기는 금지
+   - Summary/Must Fix/Nice to Have/도메인 제목 앞에 불릿(-, *, 번호 등)을 절대 붙이지 말 것
+   - Summary 항목 `- Must Fix`, `- Nice to Have`, `- 핵심 위험 요약` 사이에 빈 줄을 넣지 말 것
 
 5) 줄바꿈 규칙:
+   - Summary 섹션은 정확히 3줄(`- Must Fix`, `- Nice to Have`, `- 핵심 위험 요약`)만 포함하고 줄 사이 공백 금지
+   - Must Fix, Nice to Have 섹션 내부에서 `### 도메인명` 바로 아래에 파일명 줄을 쓰고 어떤 줄에도 불릿 기호를 추가하지 않는다
+   - 파일명 줄은 `(파일명:라인)` 형태만 허용하며 앞에 `-`나 다른 문자를 붙이지 않는다
    - !중요! 각 이슈 사이에는 빈 줄 1줄
    - Summary → Must Fix, Must Fix → Nice to Have 사이에도 빈 줄 1줄
    - 줄바꿈 2줄 이상 금지
