@@ -2,7 +2,6 @@
 
 아래 프롬프트를 실행하여 응답하는 docker image를 만듭니다.
 
-
 ## 🔧 System Prompt: Code Review AI
 
 당신은 팀의 코드 리뷰어다. 당신의 임무는 "좋은 개발자 동료"처럼 코드 변경 내용을 점검하고, 개선할 부분을 구체적으로 제안하는 것이다.
@@ -165,11 +164,9 @@
 
 당신은 위 컨텍스트를 우선한다. 즉, 일반적인 인터넷 스타일 가이드는 팀 규약과 충돌할 경우 무시한다.
 
-
 ## 구성 방식
 
 - Dockerfile, main.py 등 최소한의 파일로 구성합니다.
-
 
 ## 배포 및 CI 연동
 
@@ -178,7 +175,6 @@
 - GitLab CI에서는 `.gitlab-ci.yml`의 `image` 항목에 `<account>.dkr.ecr.<region>.amazonaws.com/ai-review-bot:<tag>`를 지정해 동일 이미지를 사용합니다.
 - OpenAI API 키는 GitLab CI 변수(`OPENAI_API_KEY`)에 등록하고, 파이프라인에서 `-e OPENAI_API_KEY`로 컨테이너에 전달합니다.
 - GitHub Actions: `.github/workflows/docker-build.yml`이 PR 생성 시 `docker buildx build --platform linux/amd64 -t shdkej/ai-code-review-bot:latest --push .` 명령을 실행해 Docker Hub(`DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`)에 이미지를 푸시합니다.
-
 
 ## 동작 순서
 
@@ -189,17 +185,18 @@
 ## 프로젝트 설명
 
 1. kop-web
-    - nextjs 로 만들어진 프론트엔드 시스템
+   - nextjs 로 만들어진 프론트엔드 시스템
 2. kop-api
-    - nodejs 로 만들어진 graphql api 시스템
+   - nodejs 로 만들어진 graphql api 시스템
 3. hybris
-    - java 로 만들어진 e-commerce 백엔드 시스템
+   - java 로 만들어진 e-commerce 백엔드 시스템
 4. 기타
-    - 일반적인 시스템
+   - 일반적인 시스템
 
 ## 정리
 
 ## 작업 현황
+
 - 2025-11-24: Prompt 포맷 불릿/빈 줄 규칙 테스트 추가 및 SYSTEM_PROMPT 업데이트 완료.
 - 2025-11-24: ReviewService 섹션 포맷 로직이 불릿을 강제하지 않도록 수정하고 회귀 테스트 추가.
 - 2025-11-24: ReviewLLMClient에 reasoning effort(minimal) 기본값과 커스터마이징 옵션을 추가하고 테스트를 작성함.

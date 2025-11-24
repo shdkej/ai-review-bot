@@ -30,7 +30,7 @@ class ReviewLLMClient:
         effort = (
             reasoning_effort
             or os.getenv("OPENAI_REVIEW_REASONING_EFFORT")
-            or "minimal"
+            or "none"
         )
         self._reasoning_effort = effort.strip() or None
         self._client: Any | None = None
