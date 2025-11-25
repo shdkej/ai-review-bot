@@ -23,6 +23,7 @@ class ReviewLLMClient:
         model: str | None = None,
         enabled: bool | None = None,
         reasoning_effort: str | None = None,
+        text_verbosity: str | None = None,
     ) -> None:
         self._api_key = api_key or os.getenv("OPENAI_API_KEY")
         self._model = model or os.getenv("OPENAI_REVIEW_MODEL", "gpt-5.1")
@@ -32,7 +33,13 @@ class ReviewLLMClient:
             or os.getenv("OPENAI_REVIEW_REASONING_EFFORT")
             or "none"
         )
+        verbosity = (
+            text_verbosity
+            or os.getenv("OPENAI_REVIEW_TEXT_VERBOSITY")
+            or "low"
+        )
         self._reasoning_effort = effort.strip() or None
+        self._text_verbosity = verbosity.strip() or None
         self._client: Any | None = None
 
         if self._enabled and OpenAI is not None:
@@ -62,6 +69,8 @@ class ReviewLLMClient:
             }
             if self._reasoning_effort:
                 payload["reasoning"] = {"effort": self._reasoning_effort}
+            if self._text_verbosity:
+                payload["text"] = {"verbosity": self._text_verbosity}
 
             response = self._client.responses.create(**payload)
         except Exception as exc:  # pragma: no cover - 네트워크 오류에 대한 방어
