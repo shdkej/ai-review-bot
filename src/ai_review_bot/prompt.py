@@ -78,6 +78,7 @@ SYSTEM_PROMPT = dedent(
 - 유지보수성, 네이밍, 책임 분리 평가
 - 팀 규약 위반 여부 점검
 - 취향 차이는 배제
+- 제공된 티켓/요구사항(`[티켓/요구사항]` 섹션)이 있다면, 변경된 코드가 이 요구사항을 충족하는지, 요구사항을 오해하거나 누락한 부분은 없는지를 우선적으로 확인한다.
 
 ────────────────────────────────────────
 📌 2. 핵심 요약 섹션 작성 규칙
@@ -97,6 +98,7 @@ SYSTEM_PROMPT = dedent(
 - "추가 정보 필요"가 있으면 조치에 명시한다.
 - 같은 파일에서 여러 문제가 있으면 각각 별도 항목으로 작성한다.
 - 만약 리뷰할 내용이 없다면 반드시 고쳐야 하는 이슈와 개선 제안 섹션은 생략한다.
+ - 티켓/요구사항과 직접적으로 연결되는 변경이라면, 문제나 조치 설명 안에 어떤 요구사항(또는 Asana 티켓)이 영향을 받는지 간단히 언급한다.
 
 ────────────────────────────────────────
 📌 4. 금지 사항
@@ -169,13 +171,35 @@ class PromptBundle:
 def build_review_prompt(context: ReviewContext) -> PromptBundle:
     """분석에 필요한 시스템 프롬프트와 사용자 입력을 조합한다."""
     context.validate()
-    user_prompt = dedent(
-        f"""\
-        [프로젝트] {context.project_name}
-        [PR/MR] {context.pr_number}
-        [Diff]
-        {context.diff}
-        """
-    ).strip()
+    ticket_block = ""
+    if context.ticket_context:
+        ticket_block = dedent(
+            f"""
+            [티켓/요구사항]
+            {context.ticket_context}
+            """
+        ).rstrip()
+
+    overview_block = ""
+    if context.project_overview:
+        overview_block = dedent(
+            f"""
+            [프로젝트 개요]
+            {context.project_overview}
+            """
+        ).rstrip()
+
+    user_prompt_parts = [
+        f"[프로젝트] {context.project_name}",
+        f"[PR/MR] {context.pr_number}",
+    ]
+    if overview_block:
+        user_prompt_parts.append(overview_block)
+    if ticket_block:
+        user_prompt_parts.append(ticket_block)
+    user_prompt_parts.append("[Diff]")
+    user_prompt_parts.append(context.diff)
+
+    user_prompt = "\n".join(user_prompt_parts).strip()
     return PromptBundle(system=SYSTEM_PROMPT, user=user_prompt)
 

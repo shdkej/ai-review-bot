@@ -12,6 +12,8 @@ class ReviewContext:
     project_name: str
     pr_number: str
     diff: str
+    ticket_context: str | None = None
+    project_overview: str | None = None
 
     def validate(self) -> None:
         if not self.project_name:

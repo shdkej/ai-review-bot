@@ -17,3 +17,9 @@ def test_system_prompt_should_forbid_blank_lines_between_summary_items() -> None
         in SYSTEM_PROMPT
     ), "Summary 항목 사이 공백 금지 규칙이 누락됨"
 
+
+def test_system_prompt_should_prioritize_requirement_based_review() -> None:
+    """티켓/요구사항 컨텍스트를 기준으로 리뷰하라는 지침이 있어야 한다."""
+    assert "티켓/요구사항" in SYSTEM_PROMPT
+    assert "요구사항을 충족하는지" in SYSTEM_PROMPT
+

@@ -1,7 +1,6 @@
 from __future__ import annotations
 import os
 import subprocess
-import sys
 from textwrap import dedent
 
 import requests
@@ -18,6 +17,7 @@ if str(SRC) not in sys.path:
 
 from ai_review_bot.review import ReviewContext
 from ai_review_bot.review_service import ReviewService
+from ai_review_bot.support.asana import build_ticket_context_from_asana
 
 
 client = OpenAI()  # OPENAI_API_KEY는 환경변수로 자동 인식
@@ -91,6 +91,8 @@ def main():
     commit_sha = require_env("CI_COMMIT_SHA")
     project_id = require_env("CI_PROJECT_ID")
     mr_iid = require_env("CI_MERGE_REQUEST_IID")
+    ci_api_v4_url = require_env("CI_API_V4_URL")
+    gitlab_token = require_env("GITLAB_TOKEN")
 
     project_name = os.getenv("LLM_REVIEW_PROJECT_NAME", "kop-web")
 
@@ -106,22 +108,68 @@ def main():
             f.write(body)
         return
 
-    # 2) OpenAI 호출
+    # 2) 레포지토리 루트의 AGENTS.md에서 프로젝트 개요 로드 (있을 경우)
+    project_overview: str | None = None
+    agents_path = Path("/workspace") / "AGENTS.md"
+    if agents_path.exists():
+        print(f"[llm-code-review] loading project overview from {agents_path}")
+        try:
+            project_overview = agents_path.read_text(encoding="utf-8")
+        except Exception as exc:  # pragma: no cover - 방어적 로깅
+            print(
+                f"[llm-code-review] WARN: failed to read AGENTS.md: {exc}",
+                file=sys.stderr,
+            )
+
+    # 3) GitLab MR description에서 Asana 티켓 컨텍스트 수집
+    ticket_context: str | None = None
+    mr_url = f"{ci_api_v4_url}/projects/{project_id}/merge_requests/{mr_iid}"
+    print(f"[llm-code-review] fetching MR description from {mr_url}")
+    try:
+        resp = requests.get(
+            mr_url,
+            headers={"PRIVATE-TOKEN": gitlab_token},
+            timeout=10,
+        )
+        if not resp.ok:
+            print(
+                f"[llm-code-review] WARN: failed to fetch MR "
+                f"(status={resp.status_code}) – continuing without ticket context",
+                file=sys.stderr,
+            )
+        else:
+            try:
+                mr_data = resp.json()
+            except ValueError:
+                mr_data = {}
+            description = str(mr_data.get("description") or "")
+            print(f"[llm-code-review] MR description: {description}")
+            if description:
+                ticket_context = build_ticket_context_from_asana(description)
+    except Exception as exc:  # pragma: no cover - 방어적 로깅
+        print(
+            f"[llm-code-review] WARN: exception while fetching MR description: {exc}",
+            file=sys.stderr,
+        )
+
+    # 4) OpenAI 호출
     review_text = ReviewService().create_review(
         ReviewContext(
             project_name=project_name,
             pr_number=mr_iid,
             diff=diff_text,
+            ticket_context=ticket_context,
+            project_overview=project_overview,
         )
     )
 
-    # 3) 결과 파일로 저장 (CI artifact 용)
+    # 5) 결과 파일로 저장 (CI artifact 용)
     review_path = "/workspace/llm_review.txt"
     print(f"[llm-code-review] writing review to {review_path}")
     with open(review_path, "w", encoding="utf-8") as f:
         f.write(review_text)
 
-    # 4) GitLab MR 코멘트 등록
+    # 6) GitLab MR 코멘트 등록
     post_comment_to_gitlab(review_text)
 
     print("[llm-code-review] complete.")
