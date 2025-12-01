@@ -1,6 +1,6 @@
 """Prompt 규칙 검증 테스트."""
 
-from ai_review_bot.domain.prompt import SYSTEM_PROMPT
+from ai_review_bot.prompt import SYSTEM_PROMPT
 
 
 def test_system_prompt_should_forbid_bullets_on_headings() -> None:

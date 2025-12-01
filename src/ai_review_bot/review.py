@@ -20,3 +20,4 @@ class ReviewContext:
             raise ValueError("pr_number must not be empty")
         if not self.diff.strip():
             raise ValueError("diff must not be empty")
+

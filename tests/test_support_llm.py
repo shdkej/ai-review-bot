@@ -1,7 +1,7 @@
 """ReviewLLMClient 동작 검증."""
 
-from ai_review_bot.domain.prompt import PromptBundle
-from ai_review_bot.support.llm import ReviewLLMClient
+from ai_review_bot.prompt import PromptBundle
+from ai_review_bot.llm import ReviewLLMClient
 
 
 class _DummyResponse:

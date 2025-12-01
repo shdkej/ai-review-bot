@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from ai_review_bot.entity.review import ReviewContext
-from ai_review_bot.service.review_service import ReviewService
+from ai_review_bot.review import ReviewContext
+from ai_review_bot.review_service import ReviewService
 
 
 class ReviewController:
@@ -19,3 +19,4 @@ class ReviewController:
             diff=raw_diff,
         )
         return self._service.create_review(context)
+

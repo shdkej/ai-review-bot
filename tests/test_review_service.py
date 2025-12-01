@@ -1,6 +1,6 @@
 """ReviewService 관련 테스트."""
 
-from ai_review_bot.service.review_service import _extract_section, _format_section
+from ai_review_bot.review_service import _extract_section, _format_section
 
 
 def test_extract_section_should_find_by_marker_not_plain_text():

@@ -10,7 +10,7 @@ try:  # pragma: no cover - import 오류는 런타임에서만 감지됨
 except ImportError:  # pragma: no cover
     OpenAI = None  # type: ignore[assignment,misc]
 
-from ai_review_bot.domain.prompt import PromptBundle
+from ai_review_bot.prompt import PromptBundle
 
 
 class ReviewLLMClient:
@@ -86,3 +86,4 @@ class ReviewLLMClient:
         if not output_text:
             raise RuntimeError("OpenAI response did not include text output.")
         return str(output_text)
+

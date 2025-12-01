@@ -6,7 +6,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from ai_review_bot.controller.review import ReviewController
+from ai_review_bot.review_controller import ReviewController
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
