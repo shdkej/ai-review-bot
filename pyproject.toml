@@ -6,6 +6,7 @@ readme = "AGENTS.md"
 requires-python = ">=3.11"
 dependencies = [
   "openai>=1.43",
+  "requests",
 ]
 
 [project.optional-dependencies]
