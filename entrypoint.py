@@ -50,8 +50,11 @@ def run_cmd(args, cwd="/workspace", capture_output=True, check=True) -> str:
 
 def generate_diff(target_branch: str, commit_sha: str) -> str:
     """origin/타겟 브랜치 기준으로 diff 생성."""
-    print(f"[llm-code-review] generating diff for origin/{target_branch}..{commit_sha}")
-    diff_text = run_cmd(["git", "diff", f"origin/{target_branch}..{commit_sha}"])
+    merge_base = run_cmd(["git", "merge-base", f"origin/{target_branch}", commit_sha]).strip()
+
+    print(f"[llm-code-review] generating diff for {merge_base}..{commit_sha}")
+
+    diff_text = run_cmd(["git", "diff", f"{merge_base}..{commit_sha}"])
     if not diff_text.strip():
         print("[llm-code-review] diff is empty – nothing to review.")
     return diff_text
