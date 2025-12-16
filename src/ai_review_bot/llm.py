@@ -28,16 +28,8 @@ class ReviewLLMClient:
         self._api_key = api_key or os.getenv("OPENAI_API_KEY")
         self._model = model or os.getenv("OPENAI_REVIEW_MODEL", "gpt-5.1")
         self._enabled = enabled if enabled is not None else bool(self._api_key)
-        effort = (
-            reasoning_effort
-            or os.getenv("OPENAI_REVIEW_REASONING_EFFORT")
-            or "none"
-        )
-        verbosity = (
-            text_verbosity
-            or os.getenv("OPENAI_REVIEW_TEXT_VERBOSITY")
-            or "low"
-        )
+        effort = reasoning_effort or os.getenv("OPENAI_REVIEW_REASONING_EFFORT") or "low"
+        verbosity = text_verbosity or os.getenv("OPENAI_REVIEW_TEXT_VERBOSITY") or "low"
         self._reasoning_effort = effort.strip() or None
         self._text_verbosity = verbosity.strip() or None
         self._client: Any | None = None
@@ -86,4 +78,3 @@ class ReviewLLMClient:
         if not output_text:
             raise RuntimeError("OpenAI response did not include text output.")
         return str(output_text)
-

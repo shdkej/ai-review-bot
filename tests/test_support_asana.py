@@ -60,5 +60,3 @@ def test_build_ticket_context_supports_new_asana_url_format():
     assert result is not None
     assert "[Asana] 신규 포맷 티켓" in result
     assert "신규 URL 패턴 테스트" in result
-
-

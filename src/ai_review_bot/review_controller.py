@@ -19,4 +19,3 @@ class ReviewController:
             diff=raw_diff,
         )
         return self._service.create_review(context)
-

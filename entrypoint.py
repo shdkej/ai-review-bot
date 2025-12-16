@@ -1,26 +1,22 @@
 from __future__ import annotations
+
 import os
 import subprocess
-from textwrap import dedent
+import sys
+from pathlib import Path
 
 import requests
 from openai import OpenAI
 
-
-from pathlib import Path
-import sys
-
 ROOT = Path(__file__).resolve().parent
 SRC = ROOT / "src"
-if str(SRC) not in sys.path:
-    sys.path.insert(0, str(SRC))
-
-from ai_review_bot.review import ReviewContext
-from ai_review_bot.review_service import ReviewService
-from ai_review_bot.support.asana import build_ticket_context_from_asana
-
 
 client = OpenAI()  # OPENAI_API_KEY는 환경변수로 자동 인식
+
+
+def _configure_sys_path() -> None:
+    if str(SRC) not in sys.path:
+        sys.path.insert(0, str(SRC))
 
 
 def require_env(name: str) -> str:
@@ -59,6 +55,7 @@ def generate_diff(target_branch: str, commit_sha: str) -> str:
         print("[llm-code-review] diff is empty – nothing to review.")
     return diff_text
 
+
 def post_comment_to_gitlab(body: str):
     """GitLab MR 코멘트 생성."""
     gitlab_token = require_env("GITLAB_TOKEN")
@@ -89,6 +86,12 @@ def post_comment_to_gitlab(body: str):
 
 
 def main():
+    _configure_sys_path()
+
+    from ai_review_bot.review import ReviewContext
+    from ai_review_bot.review_service import ReviewService
+    from ai_review_bot.support.asana import build_ticket_context_from_asana
+
     # 필수 환경변수 확인
     target_branch = require_env("CI_MERGE_REQUEST_TARGET_BRANCH_NAME")
     commit_sha = require_env("CI_COMMIT_SHA")

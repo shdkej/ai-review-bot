@@ -67,6 +67,3 @@ def test_format_section_should_preserve_single_blank_lines_between_issues():
 
     assert "\n\n" in formatted
     assert formatted.split("\n\n")[1].startswith("### Performance")
-
-
-

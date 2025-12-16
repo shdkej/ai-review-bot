@@ -4,17 +4,13 @@ from __future__ import annotations
 
 from typing import Final
 
+from ai_review_bot.llm import ReviewLLMClient
 from ai_review_bot.prompt import PromptBundle, build_review_prompt
 from ai_review_bot.review import ReviewContext
-from ai_review_bot.llm import ReviewLLMClient
 
-_HEADERS: Final[list[str]] = [
-    "핵심 요약",
-    "안정성을 위해 먼저 살펴보면 좋은 부분",
-    "추가 개선 아이디어",
-]
+_HEADERS: Final[list[str]] = ["Summary", "Must Fix", "Nice to Have"]
 _PRAISE_MESSAGE: Final[str] = (
-    "> 👏 핵심 요약, 안정성을 위해 먼저 살펴보면 좋은 부분, 추가 개선 아이디어이 모두 없었습니다. 가이드를 잘 지킨 안정적인 변경이에요!"
+    "> 👏 Summary, Must Fix, Nice to Have 모두 비어 있습니다. 가이드를 잘 지킨 안정적인 변경이에요!"
 )
 
 
@@ -120,4 +116,3 @@ def _format_section(section: str) -> str:
         return "- 없음"
 
     return "\n".join(cleaned)
-

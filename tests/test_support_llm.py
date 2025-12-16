@@ -1,7 +1,7 @@
 """ReviewLLMClient 동작 검증."""
 
-from ai_review_bot.prompt import PromptBundle
 from ai_review_bot.llm import ReviewLLMClient
+from ai_review_bot.prompt import PromptBundle
 
 
 class _DummyResponse:
@@ -60,4 +60,3 @@ def test_generate_should_allow_custom_reasoning_and_text_verbosity():
     assert dummy.responses.kwargs is not None
     assert dummy.responses.kwargs["reasoning"] == {"effort": "high"}
     assert dummy.responses.kwargs["text"] == {"verbosity": "medium"}
-

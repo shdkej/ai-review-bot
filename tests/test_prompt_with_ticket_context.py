@@ -33,5 +33,3 @@ def test_build_review_prompt_includes_project_overview_when_present():
 
     assert "[프로젝트 개요]" in bundle.user
     assert "GraphQL API 서버" in bundle.user
-
-

@@ -5,10 +5,9 @@ from __future__ import annotations
 import os
 import re
 import sys
-from typing import Callable, Mapping, Any
+from typing import Any, Callable, Mapping
 
 import requests
-
 
 _ASANA_URL_PATTERN = re.compile(
     r"https://app\.asana\.com/"
@@ -37,7 +36,7 @@ def _default_fetcher(task_id: str) -> Mapping[str, Any] | None:
     """
     token = os.getenv("ASANA_ACCESS_TOKEN")
     if not token:
-        print(f"[llm-code-review] ERROR: ASANA_ACCESS_TOKEN is missing", file=sys.stderr)
+        print("[llm-code-review] ERROR: ASANA_ACCESS_TOKEN is missing", file=sys.stderr)
         return None
 
     url = f"https://app.asana.com/api/1.0/tasks/{task_id}"
@@ -73,7 +72,7 @@ def build_ticket_context_from_asana(
     """
     task_ids = _extract_task_ids(description)
     if not task_ids:
-        print(f"[llm-code-review] ERROR: No Asana task IDs found in description", file=sys.stderr)
+        print("[llm-code-review] ERROR: No Asana task IDs found in description", file=sys.stderr)
         return None
 
     fetch = fetcher or _default_fetcher
@@ -99,5 +98,3 @@ def build_ticket_context_from_asana(
 
     result = "\n".join(lines).strip()
     return result or None
-
-
