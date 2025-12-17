@@ -12,6 +12,24 @@ def test_extract_issue_iids_should_find_links_with_dash_segment():
     assert result == ["42", "99"]
 
 
+def test_extract_issue_iids_should_read_plain_hash_reference():
+    """링크 대신 #번호만 있어도 IID를 추출해야 한다."""
+    text = "MR 설명에 #2335 와 #44 가 언급됨"
+
+    result = extract_issue_iids(text)
+
+    assert result == ["2335", "44"]
+
+
+def test_extract_issue_iids_should_skip_asana_links_but_keep_issue_refs():
+    """Asana 링크는 무시하되 별도 #참조는 찾아야 한다."""
+    text = "Asana: https://app.asana.com/0/123456/789012\n관련 이슈 #77"
+
+    result = extract_issue_iids(text)
+
+    assert result == ["77"]
+
+
 def test_collect_issue_descriptions_should_use_fetcher_and_skip_empty():
     """주입된 fetcher로 이슈 본문을 모으고 빈 본문은 건너뛴다."""
     fetched: list[str] = []

@@ -7,10 +7,11 @@ from typing import Any, Callable, Mapping
 
 import requests
 
-_ISSUE_LINK_PATTERN = re.compile(
-    r"https?://[^\s]+?/"
-    r"(?:(?:-)/)?issues/(?P<issue_iid>\d+)",  # https://gitlab.com/.../-/issues/123 또는
+_ISSUE_IID_PATTERN = re.compile(
+    r"(?:https?://[^\s]+?/"
+    r"(?:(?:-)/)?issues/(?P<link_iid>\d+)"  # https://gitlab.com/.../-/issues/123 또는
     # .../issues/123
+    r"|(?:^|[\s\[(])#(?P<reference_iid>\d+))",  # MR 설명의 #123 형식 참조(링크 내부 #은 무시)
     re.IGNORECASE,
 )
 
@@ -20,8 +21,8 @@ def extract_issue_iids(text: str) -> list[str]:
     if not text:
         return []
     issue_iids: list[str] = []
-    for match in _ISSUE_LINK_PATTERN.finditer(text):
-        iid = match.group("issue_iid")
+    for match in _ISSUE_IID_PATTERN.finditer(text):
+        iid = match.group("link_iid") or match.group("reference_iid")
         if iid not in issue_iids:
             issue_iids.append(iid)
     return issue_iids

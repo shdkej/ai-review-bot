@@ -201,3 +201,5 @@
 - 2025-11-24: ReviewService 섹션 포맷 로직이 불릿을 강제하지 않도록 수정하고 회귀 테스트 추가.
 - 2025-11-24: ReviewLLMClient에 reasoning effort(minimal) 기본값과 커스터마이징 옵션을 추가하고 테스트를 작성함.
 - 2025-11-24: ReviewLLMClient가 문서 규격에 맞춰 reasoning.effort(기본 low)와 text.verbosity(기본 low)를 별도로 전달하도록 수정하고 테스트를 업데이트함.
+- 2025-12-17: MR 설명의 #번호 참조도 GitLab 이슈 IID로 인식하도록 파싱 로직과 테스트를 보강함.
+- 2025-12-17: MR 설명에 있는 Asana 링크는 건너뛰고 별도 #참조만 GitLab 이슈 IID로 수집하도록 로직/테스트를 보완함.
