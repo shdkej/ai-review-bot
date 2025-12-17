@@ -129,6 +129,7 @@ def main():
 
     # 3) GitLab MR description에서 Asana 티켓 컨텍스트 수집
     ticket_context: str | None = None
+    issue_bodies: list[str] = []
     mr_url = f"{ci_api_v4_url}/projects/{project_id}/merge_requests/{mr_iid}"
     print(f"[llm-code-review] fetching MR description from {mr_url}")
     try:
@@ -151,7 +152,18 @@ def main():
             description = str(mr_data.get("description") or "")
             print(f"[llm-code-review] MR description: {description}")
             if description:
-                ticket_context = build_ticket_context_from_asana(description)
+                from ai_review_bot.support.gitlab import collect_issue_descriptions
+
+                issue_bodies = collect_issue_descriptions(
+                    description,
+                    api_url=ci_api_v4_url,
+                    project_id=project_id,
+                    token=gitlab_token,
+                )
+                ticket_context = build_ticket_context_from_asana(
+                    description,
+                    extra_texts=issue_bodies,
+                )
     except Exception as exc:  # pragma: no cover - 방어적 로깅
         print(
             f"[llm-code-review] WARN: exception while fetching MR description: {exc}",

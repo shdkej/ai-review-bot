@@ -60,3 +60,29 @@ def test_build_ticket_context_supports_new_asana_url_format():
     assert result is not None
     assert "[Asana] 신규 포맷 티켓" in result
     assert "신규 URL 패턴 테스트" in result
+
+
+def test_build_ticket_context_reads_from_extra_texts():
+    """기본 설명에 Asana 링크가 없어도 추가 텍스트에서 찾아야 한다."""
+    description = "이 PR은 단순 리팩토링입니다. 자세한 내용은 이슈를 참고하세요."
+    extra_texts = ["관련 작업: https://app.asana.com/0/1234/5678"]
+
+    captured: list[str] = []
+
+    def _fake_fetcher(task_id: str):
+        captured.append(task_id)
+        return {
+            "name": "추가 텍스트 티켓",
+            "notes": "본문",
+            "permalink_url": "https://app.asana.com",
+        }
+
+    result = build_ticket_context_from_asana(
+        description,
+        fetcher=_fake_fetcher,
+        extra_texts=extra_texts,
+    )
+
+    assert captured == ["5678"]
+    assert result is not None
+    assert "[Asana] 추가 텍스트 티켓" in result

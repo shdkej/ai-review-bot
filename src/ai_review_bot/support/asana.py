@@ -63,6 +63,7 @@ def _default_fetcher(task_id: str) -> Mapping[str, Any] | None:
 def build_ticket_context_from_asana(
     description: str,
     fetcher: Callable[[str], Mapping[str, Any] | None] | None = None,
+    extra_texts: list[str] | None = None,
 ) -> str | None:
     """MR description에서 Asana 링크를 찾아 티켓 요약 텍스트를 생성한다.
 
@@ -70,7 +71,13 @@ def build_ticket_context_from_asana(
     - ASANA_ACCESS_TOKEN이 없거나 API 호출이 실패하면 None을 반환한다.
     - 테스트에서는 fetcher를 주입해 네트워크 호출 없이 동작을 검증할 수 있다.
     """
-    task_ids = _extract_task_ids(description)
+    texts = [description] + (extra_texts or [])
+    task_ids: list[str] = []
+    for text in texts:
+        for task_id in _extract_task_ids(text):
+            if task_id not in task_ids:
+                task_ids.append(task_id)
+
     if not task_ids:
         print("[llm-code-review] ERROR: No Asana task IDs found in description", file=sys.stderr)
         return None
