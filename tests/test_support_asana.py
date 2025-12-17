@@ -36,10 +36,7 @@ def test_build_ticket_context_uses_provided_fetcher_and_formats_output():
 
 def test_build_ticket_context_supports_new_asana_url_format():
     """신규 Asana URL 포맷(app.asana.com/1/.../project/.../task/...)도 인식해야 한다."""
-    description = (
-        "요구사항: https://app.asana.com/1/173176713468093/project/1119186039581903/"
-        "task/1212083742273047?focus=true"
-    )
+    description = "요구사항: https://app.asana.com/1/173176713468093/project/1119186039581903/task/1212083742273047?focus=true"
 
     captured_ids: list[str] = []
 
@@ -48,10 +45,7 @@ def test_build_ticket_context_supports_new_asana_url_format():
         return {
             "name": "신규 포맷 티켓",
             "notes": "신규 URL 패턴 테스트",
-            "permalink_url": (
-                "https://app.asana.com/1/173176713468093/project/1119186039581903/"
-                "task/1212083742273047"
-            ),
+            "permalink_url": ("https://app.asana.com/1/173176713468093/project/1119186039581903/task/1212083742273047"),
         }
 
     result = build_ticket_context_from_asana(description, fetcher=_fake_fetcher)

@@ -15,6 +15,4 @@ def test_workflow_triggers_buildx_on_pull_request():
     content = WORKFLOW_PATH.read_text(encoding="utf-8")
 
     assert "pull_request" in content, "pull_request 이벤트가 설정되지 않았습니다."
-    assert (
-        "docker buildx build --platform linux/amd64 -t shdkej/ai-code-review-bot:latest --push ."
-    ) in content, "buildx 실행 명령이 누락되었습니다."
+    assert ("docker buildx build --platform linux/amd64 -t shdkej/ai-code-review-bot:latest --push .") in content, "buildx 실행 명령이 누락되었습니다."

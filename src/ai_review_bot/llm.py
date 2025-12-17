@@ -69,9 +69,7 @@ class ReviewLLMClient:
             message = str(exc)
             status = getattr(exc, "status_code", None)
             if status == 401 or "invalid_api_key" in message.lower():
-                raise RuntimeError(
-                    "OpenAI API 키가 유효하지 않습니다. 키 값을 다시 확인해 주세요."
-                ) from exc
+                raise RuntimeError("OpenAI API 키가 유효하지 않습니다. 키 값을 다시 확인해 주세요.") from exc
             raise RuntimeError(f"Failed to call OpenAI Responses API: {message}") from exc
 
         output_text = getattr(response, "output_text", None)

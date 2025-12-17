@@ -78,8 +78,7 @@ def post_comment_to_gitlab(body: str):
 
     if not resp.ok:
         print(
-            f"[llm-code-review] ERROR: failed to post comment "
-            f"(status={resp.status_code}): {resp.text}",
+            f"[llm-code-review] ERROR: failed to post comment (status={resp.status_code}): {resp.text}",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -140,8 +139,7 @@ def main():
         )
         if not resp.ok:
             print(
-                f"[llm-code-review] WARN: failed to fetch MR "
-                f"(status={resp.status_code}) – continuing without ticket context",
+                f"[llm-code-review] WARN: failed to fetch MR (status={resp.status_code}) – continuing without ticket context",
                 file=sys.stderr,
             )
         else:

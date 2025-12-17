@@ -5,10 +5,7 @@ from ai_review_bot.support.gitlab import collect_issue_descriptions, extract_iss
 
 def test_extract_issue_iids_should_find_links_with_dash_segment():
     """- 세그먼트를 포함한 GitLab 이슈 링크에서 IID를 추출해야 한다."""
-    text = (
-        "관련 이슈: https://gitlab.com/org/proj/-/issues/42 "
-        "그리고 https://gitlab.com/org/proj/issues/99"
-    )
+    text = "관련 이슈: https://gitlab.com/org/proj/-/issues/42 그리고 https://gitlab.com/org/proj/issues/99"
 
     result = extract_issue_iids(text)
 

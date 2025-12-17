@@ -9,9 +9,7 @@ from ai_review_bot.prompt import PromptBundle, build_review_prompt
 from ai_review_bot.review import ReviewContext
 
 _HEADERS: Final[list[str]] = ["Summary", "Must Fix", "Nice to Have"]
-_PRAISE_MESSAGE: Final[str] = (
-    "> 👏 Summary, Must Fix, Nice to Have 모두 비어 있습니다. 가이드를 잘 지킨 안정적인 변경이에요!"
-)
+_PRAISE_MESSAGE: Final[str] = "> 👏 Summary, Must Fix, Nice to Have 모두 비어 있습니다. 가이드를 잘 지킨 안정적인 변경이에요!"
 
 
 class ReviewService:
@@ -23,10 +21,7 @@ class ReviewService:
     def create_review(self, context: ReviewContext) -> str:
         context.validate()
         if not self._llm_client.is_available:
-            raise RuntimeError(
-                "OpenAI API를 사용할 수 없습니다. 환경 변수 OPENAI_API_KEY와 "
-                "패키지 의존성(openai)이 올바르게 설정되었는지 확인해 주세요."
-            )
+            raise RuntimeError("OpenAI API를 사용할 수 없습니다. 환경 변수 OPENAI_API_KEY와 패키지 의존성(openai)이 올바르게 설정되었는지 확인해 주세요.")
         bundle: PromptBundle = build_review_prompt(context)
         report = self._llm_client.generate(bundle)
         report = self._normalize_markdown(report)
