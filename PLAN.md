@@ -203,3 +203,4 @@
 - 2025-11-24: ReviewLLMClient가 문서 규격에 맞춰 reasoning.effort(기본 low)와 text.verbosity(기본 low)를 별도로 전달하도록 수정하고 테스트를 업데이트함.
 - 2025-12-17: MR 설명의 #번호 참조도 GitLab 이슈 IID로 인식하도록 파싱 로직과 테스트를 보강함.
 - 2025-12-17: MR 설명에 있는 Asana 링크는 건너뛰고 별도 #참조만 GitLab 이슈 IID로 수집하도록 로직/테스트를 보완함.
+- 2025-12-17: GitLab 이슈 본문 수집 시 기본 fetcher 호출을 키워드 인자로 전달하도록 수정해 MR 설명 조회 예외를 방지함.

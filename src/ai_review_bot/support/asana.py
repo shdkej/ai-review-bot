@@ -82,6 +82,8 @@ def build_ticket_context_from_asana(
         print("[llm-code-review] ERROR: No Asana task IDs found in description", file=sys.stderr)
         return None
 
+    print(f"[llm-code-review] found Asana task ids: {', '.join(task_ids)}")
+
     fetch = fetcher or _default_fetcher
     lines: list[str] = []
 

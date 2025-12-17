@@ -69,7 +69,7 @@ def collect_issue_descriptions(
     bodies: list[str] = []
 
     for issue_iid in issue_iids:
-        data = fetch(issue_iid, api_url, project_id, token)
+        data = fetch(issue_iid, api_url=api_url, project_id=project_id, token=token)
         if not data:
             continue
         body = str(data.get("description") or "").strip()

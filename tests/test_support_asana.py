@@ -80,3 +80,21 @@ def test_build_ticket_context_reads_from_extra_texts():
     assert captured == ["5678"]
     assert result is not None
     assert "[Asana] 추가 텍스트 티켓" in result
+
+
+def test_build_ticket_context_logs_when_asana_link_found(capsys):
+    """Asana 링크를 찾으면 task id를 출력 로그로 남겨야 한다."""
+    description = "관련 작업: https://app.asana.com/0/123456/789012"
+
+    def _fake_fetcher(task_id: str):
+        assert task_id == "789012"
+        return {
+            "name": "로그 확인 티켓",
+            "notes": "",
+            "permalink_url": "",
+        }
+
+    build_ticket_context_from_asana(description, fetcher=_fake_fetcher)
+
+    captured = capsys.readouterr()
+    assert "[llm-code-review] found Asana task ids: 789012" in captured.out
